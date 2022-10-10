@@ -1,7 +1,8 @@
 {% extends "home.html" %}
 
 {% block title %}FORM{% endblock %}
-<form action="#" method="post">
+{% block content2 %}
+<form action="{{ url_for('result') }}" method="post">
     <input type="number" id="windowWidth" name="windowWidth" min="3" max="10">
     <label for="windowWidth">windowWidth : </label>
     {% for x in content_list %}
@@ -10,3 +11,4 @@
     {% endfor %}
         
     <button type="submit">Submit</button>
+{% endblock %}

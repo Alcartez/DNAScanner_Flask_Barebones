@@ -13,14 +13,7 @@
         {% endif %}
         {% endwith %}
         {% endblock %}
-        <form action="#" method="post">
-            <input type="number" id="windowWidth" name="windowWidth" min="3" max="10">
-            <label for="windowWidth">windowWidth : </label>
-            {% for x in content_list %}
-                <input type="checkbox" id = {{x}} name={{x}} value={{x}}>
-                <label for={{x}}>{{x}}</label><br>
-            {% endfor %}
-                
-            <button type="submit">Submit</button>
+        {% block content2%}
+        {% endblock %}
     </body>
 </html>

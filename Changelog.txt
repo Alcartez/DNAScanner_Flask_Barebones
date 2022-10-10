@@ -9,3 +9,7 @@ Date : 21-9-2022
 # Graph names have been changed
 # Nucleotide Rules have been removed from the parameter files.
 # Gaps are removed from Variable Generator since they create an error in output column names. 
+
+Date : 10-10-2022
+# Main.py has been updated to accept column values from Parameter files.
+# home.html has been rewritten

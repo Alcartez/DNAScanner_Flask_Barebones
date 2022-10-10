@@ -16,10 +16,10 @@ print("\n Making Output Directories ...")
 
 # Setting up directory tree
 if not os.path.exists('static/Output/Parameters/Plots'):
-    os.makedirs('Output/Parameters/Plots')
+    os.makedirs('static/Output/Parameters/Plots')
 
 if not os.path.exists('static/Output/Nucleotide_Concentration/Plots'):
-    os.makedirs('Output/Nucleotide_Concentration/Plots')
+    os.makedirs('static/Output/Nucleotide_Concentration/Plots')
 
 if not os.path.exists("Parameter_Files"):
     os.makedirs("Parameter_Files")
@@ -27,7 +27,7 @@ if not os.path.exists("Parameter_Files"):
 print("\nImporting and parsing input files ...")
 
 #Import Fasta
-fasta_path = sys.argv[1]
+fasta_path = "test.fasta"
 print(fasta_path)
 record_list = list(SeqIO.parse(fasta_path, "fasta"))
 

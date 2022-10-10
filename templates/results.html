@@ -1,0 +1,11 @@
+{% extends "home.html" %}
+
+{% block title %}FORM{% endblock %}
+{% block content2 %}
+    {% for plot in plots %}
+ 
+      <iframe src= "{{plot}}"" 
+              height="500px" width="1000px">
+      </iframe>
+    {% endfor %}
+{% endblock %}
