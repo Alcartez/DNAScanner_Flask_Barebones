@@ -1,0 +1,11 @@
+Date : 20-9-2022
+# Variable Generator now generates "-" (gaps) as nucleic acids.
+# n is not an user input , instead it is looped around. 
+# Saved Filenames are changed.
+# Parameter files aren't just one file anymore , every sequence will have a mono , di , tri file.
+
+Date : 21-9-2022
+# Parameter files have changed in according to the old paper.
+# Graph names have been changed
+# Nucleotide Rules have been removed from the parameter files.
+# Gaps are removed from Variable Generator since they create an error in output column names. 
