@@ -15,11 +15,11 @@ print("\n Making Output Directories ...")
 ## Setting up environment ##
 
 # Setting up directory tree
-if not os.path.exists('static/Output/Parameters/Plots'):
-    os.makedirs('static/Output/Parameters/Plots')
+if not os.path.exists('Output/Parameters/Plots'):
+    os.makedirs('Output/Parameters/Plots')
 
-if not os.path.exists('static/Output/Nucleotide_Concentration/Plots'):
-    os.makedirs('static/Output/Nucleotide_Concentration/Plots')
+if not os.path.exists('Output/Nucleotide_Concentration/Plots'):
+    os.makedirs('Output/Nucleotide_Concentration/Plots')
 
 if not os.path.exists("Parameter_Files"):
     os.makedirs("Parameter_Files")
@@ -27,13 +27,14 @@ if not os.path.exists("Parameter_Files"):
 print("\nImporting and parsing input files ...")
 
 #Import Fasta
-fasta_path = "test.fasta"
+fasta_path = sys.argv[1]
 print(fasta_path)
 record_list = list(SeqIO.parse(fasta_path, "fasta"))
 
 # Import WindowWidth Variable
-#windowWidth = 4
-#param_selections = ['Arule', 'Trule', 'Grule', 'Bendability']
+windowWidth = 5
+param_selections = ['Arule', 'Trule', 'Grule', 'Bendability']
+SlidingWindow_param_selections = ["AA","AT","AAA"]
 
 
 #Function to Generate Variables for every nucleotide
@@ -106,9 +107,12 @@ def Window_slidingBlock(record_list,windowWidth,n):
     df.insert(1, "Ending Position" ,epl)
     print("Creating Dataframe")    
 
+    Extract_Colnames = ["Starting Position" , "Ending Position"]
+
     for j in range(len(Nucleic_acid_list)):
         df.insert(j+2, str(Nucleic_acid_list[j]), globals()[str(Nucleic_acid_list[j]+"_Block_score")])
 
+    df = df.filter(Extract_Colnames + SlidingWindow_param_selections)
     # Exporting the output as csv 
     print("Writing to CSV ...")
     df.to_csv('Output/Nucleotide_Concentration/DNAScanner_'+str(nString)+'NucleotideRule__Output.csv')   
@@ -118,7 +122,7 @@ def Window_slidingBlock(record_list,windowWidth,n):
 
     for col_val in df.columns.values[2:] :
         ## PLOTLY ##
-        print("Making Plotly Graph ...")
+        print("Making Plotly Graph for " + col_val)
         fig = px.line(df, x=df.columns.values[0], y=col_val,)
         fig.update_xaxes(rangeslider_visible=True) 
         fig.update_layout(title=str(col_val)+" Concentration Plot",xaxis_title="Position",yaxis_title=str(col_val)+" Block Score")         
@@ -165,7 +169,7 @@ def ParameterCheck(record_list,n):
             
         # Export dataframe as csv          
         print(record.name + " writing to CSV ...")
-        param_df.to_csv('Output/Parameters/Param_' + record.name + '_' + nString +"Nucleotide" + '.csv')
+        param_df.to_csv('Output/Parameters/Parameters_' + record.name + '_' + nString +"Nucleotide" + '.csv')
         
         spl = []
         for sp in range(len(param_df.index)):
@@ -173,31 +177,44 @@ def ParameterCheck(record_list,n):
         #Plotting
         for col_val in param_df.columns.values[1:] :
             ## PLOTLY ##
-            print("Parameters : Making Plotly Graph ...")
+            print("Parameters : Making Plotly Graph for " + col_val)
             fig = px.line(param_df, x=spl, y=col_val,)
             fig.update_xaxes(rangeslider_visible=True) 
-            fig.update_layout(title=str(col_val)+" Concentration Plot",xaxis_title="Position",yaxis_title=str(col_val)+" Block Score")         
+            fig.update_layout(title=str(col_val)+" Plot",xaxis_title="Position",yaxis_title=str(col_val)+" Block Score")         
             fig.write_html('Output/Parameters/Plots/'+ col_val+ '_' + record.name + '_' + nString +"Nucleotide" + '.html')                                         
                                          
 
 for n in range(2,4):
-    ## User Inputs ##
-    print("\nImporting parameters ...")
     if n == 2:
         param_input_df = pd.read_csv(r'Parameter_Files\Parameter_Sheet_Dinucleotide - Sheet1.csv')
-        #param_input_df = param_cleaner(param_input_df,param_selections)
-        #print(param_input_df.columns)
         nString = "Di"
         repairIndex = 1
+        print("\nImporting " + nString +"nucleotide parameters ...")
     elif n == 3:
         param_input_df = pd.read_csv(r'Parameter_Files\Parameter_Files_Trinucleotide - Sheet1.csv')
-        #param_input_df = param_cleaner(param_input_df,param_selections)
-        #print(param_input_df.columns)
         nString = "Tri"
         repairIndex = 1
+        print("\nImporting " + nString +"nucleotide parameters ...")
     else :
         print("\n DON'T BREAK MY SCRIPT!!") 
 
     #Functions Called
     ParameterCheck(record_list,n)
+
+for n in range(2,4):
+    if n == 1:
+        nString = "Mono"
+        repairIndex = 0
+        print("\nRunning SLiding Window on " + nString +"nucleotides ... \n")
+    if n == 2:
+        nString = "Di"
+        repairIndex = 1
+        print("\nRunning SLiding Window on " + nString +"nucleotides ... \n")
+    elif n == 3:
+        nString = "Tri"
+        repairIndex = 1
+        print("\nRunning SLiding Window on " + nString +"nucleotides ... \n")
+    else :
+        print("\n DON'T BREAK MY SCRIPT!!") 
+
     Window_slidingBlock(record_list,windowWidth,n)
